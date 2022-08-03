@@ -1,0 +1,29 @@
+{
+  "name": "wanda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./build/index.js",
+    "dev": "nodemon index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luks17/wanda.git"
+  },
+  "author": "Luks17",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Luks17/wanda/issues"
+  },
+  "homepage": "https://github.com/Luks17/wanda#readme",
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@adiwajshing/baileys": "^4.3.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
