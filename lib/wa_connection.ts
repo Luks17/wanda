@@ -1,34 +1,40 @@
 
-import makeWASocket, { useMultiFileAuthState, DisconnectReason } from "@adiwajshing/baileys";
+import makeWASocket, { useMultiFileAuthState, fetchLatestBaileysVersion, DisconnectReason, WASocket } from "@adiwajshing/baileys";
 import { Boom } from "@hapi/boom";
 import path from "path";
 
-export async function connectToWA() {
+
+// returns socket with WA connection
+export async function connectToWA(): Promise<WASocket> {
+  // saves session and credentials in cache folder
   const { state, saveCreds } = await useMultiFileAuthState(
-    path.resolve(__dirname, "..", "cache", "auth_info.json")
-  )
+    path.resolve(__dirname, "..", "cache")
+  );
+
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+	console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`);
 
   const sock = makeWASocket({
+    version,
     auth: state,
     printQRInTerminal: true,
-  })
+  });
 
   sock.ev.on("creds.update", saveCreds);
 
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect } = update
+  // checks for connection updates and handles them
+  sock.ev.on('connection.update', async update => {
+    const { connection, lastDisconnect } = update;
     if (connection === 'close') {
-      const shouldReconnect = (lastDisconnect?.error as Boom).output?.statusCode !== DisconnectReason.loggedOut
-      console.log('connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect)
-      // reconnect if not logged out
+      const shouldReconnect = (lastDisconnect?.error as Boom).output?.statusCode !== DisconnectReason.loggedOut;
+      console.log('connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect);
       if (shouldReconnect) {
-        connectToWA()
+        await connectToWA();
       }
     } else if (connection === 'open') {
-      console.log('opened connection')
+      console.log('opened connection');
     }
-  })
-
+  });
 
   return sock;
 };

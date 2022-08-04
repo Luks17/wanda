@@ -8,7 +8,7 @@
 
 ## Roadmap
 
-- [ ] Basic WhatsApp connection and functionality;
+- [x] Basic WhatsApp connection and functionality;
 - [ ] Retrieve audio files from socket;
 - [ ] Audio to transcription backend;
 - [ ] Multiple languages support;
