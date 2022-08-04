@@ -1,6 +1,6 @@
 # Wanda - An Audio Transcripter Bot for WhatsApp
 
-  Wanda is a WhatsApp bot that receives audio messages and sends the text transcript.
+  Wanda is a WhatsApp bot that receives audio messages and sends back the text transcript.
 
 ## Installation and usage
 
