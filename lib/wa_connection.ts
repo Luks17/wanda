@@ -29,7 +29,7 @@ export async function connectToWA(): Promise<WASocket> {
       const shouldReconnect = (lastDisconnect?.error as Boom).output?.statusCode !== DisconnectReason.loggedOut;
       console.log('connection closed due to ', lastDisconnect?.error, ', reconnecting ', shouldReconnect);
       if (shouldReconnect) {
-        await connectToWA();
+        connectToWA();
       }
     } else if (connection === 'open') {
       console.log('opened connection');
