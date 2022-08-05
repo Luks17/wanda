@@ -16,7 +16,7 @@ export async function upsertHandler(sock: WASocket): Promise<WASocket> {
         Answers message if it's not from themselves AND the message is from an user (not a group, broadcast, business, etc) AND
         the message contains text or media.
         */
-        if (/*!m.key.fromMe &&*/ isJidUser(m.key.remoteJid!) && m.message) {
+        if (!m.key.fromMe && isJidUser(m.key.remoteJid!) && m.message) {
           const replyHandler = new ReplyHandler(sock, m);
 
           await replyHandler.reply();
