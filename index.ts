@@ -1,12 +1,12 @@
 
-import { connectToWA } from "./lib/wa_connection";
-import { answerMsg } from "./lib/wa_answers";
+import { connectToWA } from "./WAListeners/connection";
+import { upsertHandler } from "./WAListeners/upsert";
 
 
 async function main(): Promise<void> {
   const sock = await connectToWA();
 
-  await answerMsg(sock);
+  await upsertHandler(sock);
 }
 
 main();
