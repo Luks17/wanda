@@ -19,7 +19,7 @@ export async function upsertHandler(sock: WASocket): Promise<WASocket> {
         if (!m.key.fromMe && isJidUser(m.key.remoteJid!) && m.message) {
           const replyHandler = new ReplyHandler(sock, m);
 
-          await replyHandler.reply();
+          replyHandler.reply();
         }
       }
     }
