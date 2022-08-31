@@ -2,9 +2,9 @@
 
   Wanda is a WhatsApp bot that receives audio messages and sends back the text transcript.
 
-## Installation and usage
+## Setup and Usage
 
-
+  Node, Python and FFmpeg are required.
 
 ## Roadmap
 

@@ -18,12 +18,12 @@
   },
   "homepage": "https://github.com/Luks17/wanda#readme",
   "devDependencies": {
-    "@types/node": "^18.6.3",
+    "@types/node": "^18.7.14",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^4.3.0",
+    "@adiwajshing/baileys": "^4.4.0",
     "qrcode-terminal": "^0.12.0"
   }
 }
