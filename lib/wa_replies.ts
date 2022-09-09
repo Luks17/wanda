@@ -1,6 +1,7 @@
 
 import { AnyMessageContent, delay, proto, WASocket } from "@adiwajshing/baileys"
 import { downloadAudioMessage } from "./wa_download_audio";
+import { speechToText } from "./speech_to_text";
 
 
 export class ReplyHandler {
@@ -31,19 +32,12 @@ export class ReplyHandler {
     await this.sock.sendMessage(this.remoteJid, msg);
   }
 
-  private async speechToText(audioLocation: string): Promise<void> {
-    console.log("to be implemented");
-    // const childPython = spawn("python", [path.join(__dirname, "..", "..", "scripts", "speech_recognition.py")]);
-    // childPython.stdout.on("data", data => console.log(`Python stdout: ${data}`));
-    // childPython.stderr.on("data", data => console.log(`Python stderr: ${data}`));
-    // childPython.on("close", code => console.log(`Python Script exited with code ${code}`));
-  }
-
   async reply(): Promise<void> {
     const messageType = this.getReceivedMessageType();
     if (messageType === "audioMessage") {
-      downloadAudioMessage(this.receivedMessage).then(outputLocation => {
-        this.speechToText(outputLocation);
+      downloadAudioMessage(this.receivedMessage).then(async outputLocation => {
+        const speechTranscription = await speechToText(outputLocation);
+        this.compose({ text: speechTranscription });
       })
       .catch(err => {
         console.log(err);
