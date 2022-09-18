@@ -3,10 +3,14 @@ from vosk import KaldiRecognizer, Model, SetLogLevel
 import sys
 import wave
 import json
+import os
+
+filePath = sys.argv[1]
+language = sys.argv[2]
 
 SetLogLevel(-1) # disables debug messages
 
-wf = wave.open(sys.argv[1], "rb")
+wf = wave.open(filePath, "rb")
 # checks if audio file has the correct type and encodings
 if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE":
     print(wf.getnchannels())
@@ -14,7 +18,7 @@ if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE
     print(wf.getcomptype())
     exit(1)
 
-model = Model(lang="pt")
+model = Model(lang=language)
 
 rec = KaldiRecognizer(model, wf.getframerate())
 rec.SetWords(True)
@@ -28,3 +32,5 @@ while True:
         pass
 
 print(json.loads(rec.FinalResult())["text"])
+
+os.remove(filePath)

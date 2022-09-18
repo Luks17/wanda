@@ -11,5 +11,5 @@
 - [x] Basic WhatsApp connection and functionality;
 - [x] Retrieve audio files from socket;
 - [x] Audio to transcription backend;
-- [ ] Multiple languages support;
+- [x] Multiple languages support;
 - [ ] Finish project.

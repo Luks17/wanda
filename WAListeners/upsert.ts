@@ -1,10 +1,12 @@
 
 import { isJidUser, WASocket } from "@adiwajshing/baileys";
-import { ReplyHandler } from "../lib/wa_replies";
+import { SessionHandler } from "../lib/wa_session";
 
 
 // handles pending received messages
 export async function upsertHandler(sock: WASocket): Promise<WASocket> {
+  const activeSessions = new Map();
+
   sock.ev.on('messages.upsert', async upsert => {
 
     // Only checks for messages that are sent when wanda is online
@@ -12,14 +14,33 @@ export async function upsertHandler(sock: WASocket): Promise<WASocket> {
       console.log(JSON.stringify(upsert, undefined, 2));
       for (const m of upsert.messages) {
         await sock.readMessages([m.key]);
+        const remoteJid = m.key.remoteJid!;
         /* 
         Answers message if it's not from themselves AND the message is from an user (not a group, broadcast, business, etc) AND
         the message contains text or media.
         */
-        if (!m.key.fromMe && isJidUser(m.key.remoteJid!) && m.message) {
-          const replyHandler = new ReplyHandler(sock, m);
+        if (!m.key.fromMe && isJidUser(remoteJid) && m.message) {
+          let sessionHandler: SessionHandler;
 
-          replyHandler.reply();
+          // checks if a session with the jid already exists, creating one if it does not and restoring it if it does
+          if(!activeSessions.has(remoteJid)) {
+            sessionHandler = new SessionHandler(sock, remoteJid);
+            sessionHandler.sendLanguageButtons();
+            activeSessions.set(remoteJid, sessionHandler);
+          }
+          else {
+            sessionHandler = activeSessions.get(remoteJid);
+
+            if(m.message.buttonsResponseMessage) {
+              try{ 
+                sessionHandler.selectLanguage(m.message.buttonsResponseMessage.selectedButtonId!);
+              }
+              catch(err) {
+                console.log(err);
+              }
+            }
+            sessionHandler.reply(m)
+          }
         }
       }
     }

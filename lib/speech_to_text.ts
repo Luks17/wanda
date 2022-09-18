@@ -3,11 +3,11 @@ import { spawn } from "child_process";
 import path from "path";
 
 
-export function speechToText(audioLocation: string): Promise<string> {
+export function speechToText(audioLocation: string, languageCode: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const pythonProcess = spawn(
       path.join(__dirname, "..", "..", "venv", "bin", "python"),
-      [path.join(__dirname, "..", "..", "python_scripts", "speech_recognition.py"), audioLocation],
+      [path.join(__dirname, "..", "..", "python_scripts", "speech_recognition.py"), audioLocation, languageCode],
     );
 
     pythonProcess.stdout.on("data", data => {
@@ -22,7 +22,3 @@ export function speechToText(audioLocation: string): Promise<string> {
     })
   })
 }
-
-// speechToText("../build/media/audio.wav").then(data => {
-//   console.log(data);
-// })
