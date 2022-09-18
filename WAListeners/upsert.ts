@@ -1,7 +1,20 @@
 
-import { isJidUser, WASocket } from "@adiwajshing/baileys";
+import { isJidUser, proto, WASocket } from "@adiwajshing/baileys";
 import { SessionHandler } from "../lib/wa_session";
 
+
+function selectSessionLanguage(session: SessionHandler,message: proto.IMessage) {
+  // checks if message is a button message response, ignores it if it is not
+  if (message.buttonsResponseMessage) {
+    // selects message for session if the message code is valid, throws error otherwise
+    try {
+      session.selectLanguage(message.buttonsResponseMessage.selectedButtonId!);
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+}
 
 // handles pending received messages
 export async function upsertHandler(sock: WASocket): Promise<WASocket> {
@@ -30,15 +43,7 @@ export async function upsertHandler(sock: WASocket): Promise<WASocket> {
           }
           else {
             sessionHandler = activeSessions.get(remoteJid);
-
-            if(m.message.buttonsResponseMessage) {
-              try{ 
-                sessionHandler.selectLanguage(m.message.buttonsResponseMessage.selectedButtonId!);
-              }
-              catch(err) {
-                console.log(err);
-              }
-            }
+            selectSessionLanguage(sessionHandler, m.message);
             sessionHandler.reply(m)
           }
         }

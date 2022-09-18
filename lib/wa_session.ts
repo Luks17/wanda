@@ -38,6 +38,34 @@ export class SessionHandler {
     return await this.sock.sendMessage(this.remoteJid, msg);
   }
 
+  private async defaultMessage(): Promise<void> {
+    switch (this.selectedLanguage) {
+      case "en-us":
+        this.compose({ text: "Hello There! Send me an audio." });
+        break;
+      case "pt":
+        this.compose({ text: "Olá! Me mande um áudio." });
+        break;
+      case "es":
+        this.compose({ text: "¡Hola! Enviame un audio." });
+        break;
+    }
+  }
+
+  private async defaultErrorMessage(): Promise<void> {
+    switch (this.selectedLanguage) {
+      case "en-us":
+        this.compose({ text: "Something went wrong! Try again later." });
+        break;
+      case "pt":
+        this.compose({ text: "Algo deu errado, tente novamente mais tarde." });
+        break;
+      case "es":
+        this.compose({ text: "Algo salió mal, inténtelo de nuevo más tarde." });
+        break;
+    }
+  }
+
   async sendLanguageButtons(): Promise<void> {
     const buttons = [
       {buttonId: 'en-us', buttonText: {displayText: 'English'}, type: 1},
@@ -56,7 +84,6 @@ export class SessionHandler {
   }
 
   selectLanguage(languageCode: string): void {
-
     if(this.availableLanguages.includes(languageCode)) {
       this.selectedLanguage = languageCode;
     }
@@ -78,21 +105,11 @@ export class SessionHandler {
       })
       .catch(err => {
         console.log(err);
-        this.compose({ text: "Something went wrong! Try again later.\nAlgo deu errado, tente novamente mais tarde." });
+        this.defaultErrorMessage();
       })
     }
     else {
-      switch(this.selectedLanguage) {
-        case "en-us":
-          this.compose({ text: "Hello There! Send me an audio." });
-          break;
-        case "pt":
-          this.compose({ text: "Olá! Me mande um áudio." });
-          break;
-        case "es":
-          this.compose({ text: "¡Hola! Enviame un audio." });
-          break;
-      }
+      this.defaultMessage();
     }
   }
 }
