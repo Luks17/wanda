@@ -5,14 +5,16 @@ import { speechToText } from "./speech_to_text";
 
 
 export class SessionHandler {
-  readonly sock: WASocket;
-  readonly remoteJid: string;
-  selectedLanguage: string;
-  availableLanguages: Array<string>;
+  private readonly sock: WASocket;
+  private readonly remoteJid: string;
+  private selectedLanguage: string;
+  private availableLanguages: Array<string>;
+  private sessionLifeSpan: number;
 
-  constructor(socket: WASocket, remoteJid: string) {
+  constructor(socket: WASocket, remoteJid: string, sessionLifeSpan=3) {
     this.sock = socket;
     this.remoteJid = remoteJid;
+    this.sessionLifeSpan = sessionLifeSpan;
     this.selectedLanguage = "";
     this.availableLanguages = [
       "en-us",
@@ -61,9 +63,34 @@ export class SessionHandler {
         this.compose({ text: "Algo deu errado, tente novamente mais tarde." });
         break;
       case "es":
-        this.compose({ text: "Algo salió mal, inténtelo de nuevo más tarde." });
+        this.compose({ text: "¡Algo salió mal, inténtelo de nuevo más tarde." });
         break;
     }
+  }
+
+  async defaultGoodByeMessage(): Promise<void> {
+    switch (this.selectedLanguage) {
+      case "en-us":
+        this.compose({ text: "Goodbye!" });
+        break;
+      case "pt":
+        this.compose({ text: "Até mais!" });
+        break;
+      case "es":
+        this.compose({ text: "Hasta luego!" });
+        break;
+    }
+  }
+
+  progressLifeSpan(): number {
+    if(this.sessionLifeSpan > 0)
+      this.sessionLifeSpan--;
+
+    return this.sessionLifeSpan;
+  }
+
+  refreshLifeSpan(unitsOfTime=3) {
+    this.sessionLifeSpan = unitsOfTime;
   }
 
   async sendLanguageButtons(): Promise<void> {
@@ -111,5 +138,13 @@ export class SessionHandler {
     else {
       this.defaultMessage();
     }
+  }
+
+  getSessionLifeSpan(): number {
+    return this.sessionLifeSpan;
+  }
+
+  getSessionRemoteJid(): string {
+    return this.remoteJid;
   }
 }
