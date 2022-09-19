@@ -4,7 +4,14 @@
 
 ## Setup and Usage
 
-  Node, Python and FFmpeg are required.
+  Git, Node, Python and FFmpeg are required. Windows is not supported.
+
+### Instalation
+
+  ```bash
+  $ git clone https://github.com/Luks17/wanda.git && cd ./wanda
+  $ chmod +x ./run.sh && ./run.sh
+  ```
 
 ## Roadmap
 
