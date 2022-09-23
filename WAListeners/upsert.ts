@@ -21,7 +21,7 @@ export async function upsertHandler(sock: WASocket): Promise<WASocket> {
         Answers message if it's not from themselves AND the message is from an user (not a group, broadcast, business, etc) AND
         the message contains text or media.
         */
-        if (!m.key.fromMe && isJidUser(remoteJid) && m.message) {
+        if (m.key.fromMe && isJidUser(remoteJid) && m.message) {
           let sessionHandler: SessionHandler;
 
           // checks if a session with the jid already exists, creating one if it does not and restoring it if it does

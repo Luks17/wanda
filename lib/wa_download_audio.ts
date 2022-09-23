@@ -3,13 +3,14 @@ import { downloadMediaMessage, proto } from "@adiwajshing/baileys";
 import { mkdir, writeFile, unlink } from "fs/promises";
 import path from "path";
 import { opusToWav } from "./opus_to_wav";
+import { newRandomId } from "./random_id";
 
 
 export function downloadAudioMessage(receivedMessage: proto.IWebMessageInfo): Promise <string> {
   return new Promise(async (resolve, reject) => {
     const buffer = await downloadMediaMessage(receivedMessage, "buffer", {});
     const mediaDir = path.join(__dirname, "..", "media");
-    const downloadedAudioName = "audio.opus";
+    const downloadedAudioName = newRandomId(12) + ".opus";
 
     // creates directory media if it does exist
     try { await mkdir(mediaDir); }
