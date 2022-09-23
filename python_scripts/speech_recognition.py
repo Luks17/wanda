@@ -8,6 +8,12 @@ import os
 filePath = sys.argv[1]
 language = sys.argv[2]
 
+languages = {
+    "pt": "vosk-model-pt-fb-v0.1.1-20220516_2113",
+    "es": "vosk-model-es-0.42",
+    "en": "vosk-model-en-us-0.22"
+}
+
 SetLogLevel(-1) # disables debug messages
 
 wf = wave.open(filePath, "rb")
@@ -18,7 +24,7 @@ if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getcomptype() != "NONE
     print(wf.getcomptype())
     exit(1)
 
-model = Model(lang=language)
+model = Model(model_name=languages[language])
 
 rec = KaldiRecognizer(model, wf.getframerate())
 rec.SetWords(True)
